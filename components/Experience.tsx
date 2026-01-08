@@ -25,7 +25,7 @@ const experiences = [
     company: "BSD Infotech Pvt Ltd",
     location: "New Delhi, India",
     type: "Full-time",
-    duration: "Jan 2024 – Present",
+    duration: "May 2024 – Present",
     description: "Developing enterprise-level web applications using modern MERN stack technologies. Collaborating with cross-functional teams to deliver scalable solutions.",
     responsibilities: [
       "Designed and developed scalable MERN stack applications for diverse clients",

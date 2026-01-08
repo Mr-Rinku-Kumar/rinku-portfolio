@@ -77,7 +77,8 @@ export default function Contact() {
   const [error, setError] = useState<string | null>(null);
   const [isEmailConfigured, setIsEmailConfigured] = useState(true);
   
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  // Fixed: Added initial value for useRef
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Cleanup timeout on unmount
   useEffect(() => {

@@ -295,7 +295,7 @@ export default function Home() {
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="text-center">
                           <FiCode className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 text-cyan-400 mb-4" />
-                          <span className="text-gray-400 text-sm"><img src="./RinkuMERN2026.png" alt="rinku" /></span>
+                          <span className="text-gray-400 text-sm"><img src="./Rinku-Kumar-MERN-Stack-Developer-React-Js.png" alt="Rinku Kumar MERN Stack Developer" /></span>
                         </div>
                       </div>
                     </div>

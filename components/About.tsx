@@ -80,7 +80,7 @@ export default function About() {
                   <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 p-1 mx-auto">
                     <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
                       {/* <FiUser className="w-12 h-12 sm:w-16 sm:h-16 text-cyan-400" /> */}
-                      <img className='object-contain rounded-full h-full w-full' src="./RinkuMERN.png" alt="Rinku Singh" />
+                      <img className='object-contain rounded-full h-full w-full' src="./rinku-kumar-mern-stack-developer-logo.png" alt=" Rinku Kumar MERN Stack Developer" />
                     </div>
                   </div>
                   <motion.div
@@ -89,16 +89,16 @@ export default function About() {
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   />
                 </div>
-                
+
                 <h3 className="text-xl sm:text-2xl font-bold mb-2">Rinku Kumar</h3>
                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 mb-4">
                   <span className="text-cyan-400 font-medium text-sm">MERN Stack Developer</span>
                 </div>
-                
+
                 <p className="text-gray-400 text-sm sm:text-base mb-4">
                   Passionate about building scalable web applications with clean code and modern practices.
                 </p>
-                
+
                 <div className="flex justify-center space-x-3">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-cyan-400">1+</div>
@@ -166,11 +166,10 @@ export default function About() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 capitalize ${
-                      activeTab === tab
+                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 capitalize ${activeTab === tab
                         ? 'bg-gradient-to-r from-cyan-600 to-purple-600 text-white shadow-lg shadow-cyan-500/20'
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
-                    }`}
+                      }`}
                   >
                     {tab}
                   </button>
@@ -188,19 +187,19 @@ export default function About() {
                     <h3 className="text-xl sm:text-2xl font-bold mb-4">My Journey</h3>
                     <div className="space-y-4">
                       <p className="text-gray-300 leading-relaxed">
-                        I'm a passionate <span className="text-cyan-400 font-medium">MERN Stack Developer</span> with 
-                        over a year of professional experience at <span className="text-purple-400">BSD Infotech Pvt Ltd</span>, 
+                        I'm a passionate <span className="text-cyan-400 font-medium">MERN Stack Developer</span> with
+                        over a year of professional experience at <span className="text-purple-400">BSD Infotech Pvt Ltd</span>,
                         where I've been building robust, scalable web applications that solve real-world problems.
                       </p>
                       <p className="text-gray-300 leading-relaxed">
-                        My expertise spans the entire development lifecycle - from conceptualizing user interfaces 
-                        to implementing server-side logic and database architecture. I thrive on turning complex 
+                        My expertise spans the entire development lifecycle - from conceptualizing user interfaces
+                        to implementing server-side logic and database architecture. I thrive on turning complex
                         requirements into elegant, efficient solutions.
                       </p>
                       <p className="text-gray-300 leading-relaxed">
-                        What drives me is the intersection of <span className="text-green-400">clean design</span>, 
-                        <span className="text-blue-400"> optimal performance</span>, and 
-                        <span className="text-orange-400"> maintainable code</span>. I believe great software 
+                        What drives me is the intersection of <span className="text-green-400">clean design</span>,
+                        <span className="text-blue-400"> optimal performance</span>, and
+                        <span className="text-orange-400"> maintainable code</span>. I believe great software
                         should not only work well but also be a joy to build upon.
                       </p>
                     </div>
@@ -239,7 +238,7 @@ export default function About() {
                     <p className="text-gray-400 mb-6">
                       My skill set spans across modern web development technologies with a focus on the MERN stack
                     </p>
-                    
+
                     <div className="space-y-4">
                       {skills.map((skill, index) => (
                         <motion.div
@@ -258,7 +257,7 @@ export default function About() {
                             </div>
                             <span className="text-sm text-gray-400">{skill.level}%</span>
                           </div>
-                          
+
                           <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
                             <motion.div
                               initial={{ width: 0 }}
@@ -295,7 +294,7 @@ export default function About() {
                     className="space-y-6"
                   >
                     <h3 className="text-xl sm:text-2xl font-bold mb-4">Development Philosophy</h3>
-                    
+
                     <div className="space-y-6">
                       <div className="space-y-3">
                         <h4 className="text-lg font-semibold text-cyan-400 flex items-center space-x-2">
@@ -303,8 +302,8 @@ export default function About() {
                           <span>Clean & Maintainable Code</span>
                         </h4>
                         <p className="text-gray-300">
-                          I believe that code is read more often than it's written. My focus is on writing 
-                          clean, self-documenting code that's easy to understand, modify, and scale. 
+                          I believe that code is read more often than it's written. My focus is on writing
+                          clean, self-documenting code that's easy to understand, modify, and scale.
                           Following SOLID principles and design patterns to create robust architectures.
                         </p>
                       </div>
@@ -315,8 +314,8 @@ export default function About() {
                           <span>Performance First</span>
                         </h4>
                         <p className="text-gray-300">
-                          Every millisecond counts. I optimize applications for speed through code splitting, 
-                          lazy loading, efficient algorithms, and proper caching strategies. Performance 
+                          Every millisecond counts. I optimize applications for speed through code splitting,
+                          lazy loading, efficient algorithms, and proper caching strategies. Performance
                           monitoring and optimization are integral parts of my development process.
                         </p>
                       </div>
@@ -327,8 +326,8 @@ export default function About() {
                           <span>User-Centric Design</span>
                         </h4>
                         <p className="text-gray-300">
-                          Great software solves user problems elegantly. I focus on creating intuitive 
-                          interfaces and seamless experiences, ensuring accessibility and responsiveness 
+                          Great software solves user problems elegantly. I focus on creating intuitive
+                          interfaces and seamless experiences, ensuring accessibility and responsiveness
                           across all devices and platforms.
                         </p>
                       </div>
@@ -339,8 +338,8 @@ export default function About() {
                           <span>Continuous Learning</span>
                         </h4>
                         <p className="text-gray-300">
-                          Technology evolves rapidly. I stay updated with the latest trends, tools, and 
-                          best practices through continuous learning, experimentation, and contributing 
+                          Technology evolves rapidly. I stay updated with the latest trends, tools, and
+                          best practices through continuous learning, experimentation, and contributing
                           to open-source projects.
                         </p>
                       </div>

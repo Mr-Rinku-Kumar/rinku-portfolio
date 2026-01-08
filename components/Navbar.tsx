@@ -119,7 +119,7 @@ export default function Navbar() {
                     <div className="relative w-8 h-8">
                       {/* Replace with your logo image */}
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-white font-bold text-lg"><img src="/RinkuMERN.png" alt="Rinku Kumar Logo" className="object-cover h-full w-full" /></span>
+                        <span className="text-white font-bold text-lg"><img src="/rinku-kumar-mern-stack-developer-logo.png" alt="Rinku Kumar MERN Stack Developer Logo" className="object-cover h-full w-full" /></span>
                       </div>
                       {/* Alternative: Use Image component if you have a logo file */}
                       {/* <Image

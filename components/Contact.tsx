@@ -1,12 +1,35 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { FiMail, FiMapPin, FiPhone, FiSend, FiCheckCircle, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiTwitter, FiGlobe } from 'react-icons/fi';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { FiMail, FiMapPin, FiPhone, FiSend, FiCheckCircle, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiTwitter, FiGlobe, FiAlertCircle } from 'react-icons/fi';
 import { FaWhatsapp, FaTelegram, FaDiscord } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
+import emailjs from '@emailjs/browser';
 
-const contactInfo = [
+interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+interface ContactInfo {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  value: string;
+  link: string;
+  color: string;
+}
+
+interface SocialLink {
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  label: string;
+  color: string;
+}
+
+const contactInfo: ContactInfo[] = [
   {
     icon: FiMail,
     title: "Email",
@@ -30,19 +53,20 @@ const contactInfo = [
   },
 ];
 
-const socialLinks = [
+const socialLinks: SocialLink[] = [
   { icon: FiLinkedin, href: "https://in.linkedin.com/in/rinku-kumar-6a611a311", label: "LinkedIn", color: "hover:bg-blue-500/20 hover:text-blue-400 hover:border-blue-500/50" },
   { icon: FiGithub, href: "https://github.com/Mr-Rinku-Kumar", label: "GitHub", color: "hover:bg-gray-700 hover:text-white hover:border-gray-600" },
-  // { icon: SiLeetcode, href: "https://leetcode.com", label: "LeetCode", color: "hover:bg-yellow-500/20 hover:text-yellow-400 hover:border-yellow-500/50" },
-  // { icon: FiTwitter, href: "https://twitter.com", label: "Twitter", color: "hover:bg-sky-500/20 hover:text-sky-400 hover:border-sky-500/50" },
   { icon: FaWhatsapp, href: "https://wa.me/918449872248", label: "WhatsApp", color: "hover:bg-green-500/20 hover:text-green-400 hover:border-green-500/50" },
-  { icon: FaTelegram, href: "https://t.me/rinkukumar", label: "Telegram", color: "hover:bg-blue-400/20 hover:text-blue-300 hover:border-blue-400/50" },
-  // { icon: FaDiscord, href: "https://discord.com", label: "Discord", color: "hover:bg-indigo-500/20 hover:text-indigo-400 hover:border-indigo-500/50" },
-  // { icon: FiGlobe, href: "https://yourportfolio.com", label: "Portfolio", color: "hover:bg-cyan-500/20 hover:text-cyan-400 hover:border-cyan-500/50" },
+  { icon: FaTelegram, href: "https://t.me/Rinku_71", label: "Telegram", color: "hover:bg-blue-400/20 hover:text-blue-300 hover:border-blue-400/50" },
 ];
 
+// Email.js Configuration
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '';
+
 export default function Contact() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     subject: '',
@@ -50,30 +74,121 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isEmailConfigured, setIsEmailConfigured] = useState(true);
+  
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Check EmailJS configuration on mount
+  useEffect(() => {
+    const checkEmailConfig = () => {
+      const missingVars = [];
+      
+      if (!EMAILJS_SERVICE_ID) missingVars.push('NEXT_PUBLIC_EMAILJS_SERVICE_ID');
+      if (!EMAILJS_TEMPLATE_ID) missingVars.push('NEXT_PUBLIC_EMAILJS_TEMPLATE_ID');
+      if (!EMAILJS_PUBLIC_KEY) missingVars.push('NEXT_PUBLIC_EMAILJS_PUBLIC_KEY');
+      
+      if (missingVars.length > 0) {
+        console.warn(`Missing EmailJS environment variables: ${missingVars.join(', ')}`);
+        setIsEmailConfigured(false);
+      }
+    };
+    
+    checkEmailConfig();
+  }, []);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
-  };
+    if (error) setError(null);
+  }, [error]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const validateForm = useCallback((): boolean => {
+    // Form validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setError('Please fill in all required fields');
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+
+    return true;
+  }, [formData]);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (!isEmailConfigured) {
+      setError('Email service is currently unavailable. Please contact me directly at 730551rinku@gmail.com');
+      return;
+    }
+
     setIsSubmitting(true);
+    setError(null);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject || `Portfolio Contact from ${formData.name}`,
+        message: formData.message,
+        to_name: 'Rinku Kumar',
+        to_email: '730551rinku@gmail.com',
+        date: new Date().toLocaleString('en-IN', { 
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'full',
+          timeStyle: 'short'
+        }),
+        reply_to: formData.email,
+        timestamp: new Date().toISOString()
+      };
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      const result = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
 
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 3000);
-  };
+      if (result.status === 200) {
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+
+        // Auto-reset success message after 5 seconds
+        timeoutRef.current = setTimeout(() => {
+          setIsSubmitted(false);
+        }, 5000);
+      } else {
+        throw new Error('Failed to send message');
+      }
+    } catch (error: any) {
+      console.error('Email sending error:', error);
+      setError(
+        error.text ||
+        'Failed to send message. Please try again or contact me directly at 730551rinku@gmail.com'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [formData, isEmailConfigured, validateForm]);
 
   return (
     <section id="contact" className="relative py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden">
@@ -105,6 +220,20 @@ export default function Contact() {
             Have a project in mind, a job opportunity, or just want to say hello?
             I'd love to hear from you!
           </p>
+          
+          {/* Configuration Warning */}
+          {!isEmailConfigured && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg max-w-md mx-auto"
+            >
+              <p className="text-sm text-yellow-400 flex items-center justify-center gap-2">
+                <FiAlertCircle className="w-4 h-4" />
+                Email service is in demo mode. Messages won't be sent.
+              </p>
+            </motion.div>
+          )}
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
@@ -126,101 +255,135 @@ export default function Contact() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-12"
+                aria-live="polite"
+                aria-atomic="true"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FiCheckCircle className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="text-xl font-bold mb-2">Message Sent!</h4>
-                <p className="text-gray-400 mb-6">
-                  Thank you for reaching out. I'll get back to you within 24 hours.
+                <h4 className="text-xl font-bold mb-2">Message Sent Successfully!</h4>
+                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                  Thank you for reaching out, {formData.name}. I've received your message and will get back to you within 24 hours.
                 </p>
                 <div className="flex justify-center">
                   <div className="w-32 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" />
                 </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  You can also reach me directly at 730551rinku@gmail.com
+                </p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                {/* Error Message */}
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 rounded-lg bg-red-500/10 border border-red-500/30"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <FiAlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-red-400" id="error-message">{error}</p>
+                    </div>
+                  </motion.div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300 flex items-center space-x-2">
+                    <label htmlFor="name" className="text-sm font-medium text-gray-300 flex items-center space-x-2">
                       <FiUser className="w-4 h-4" />
-                      <span>Your Name</span>
+                      <span>Your Name *</span>
                     </label>
                     <input
+                      id="name"
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
                       required
                       placeholder="John Doe"
-                      className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
+                      className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isSubmitting}
+                      aria-required="true"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300 flex items-center space-x-2">
+                    <label htmlFor="email" className="text-sm font-medium text-gray-300 flex items-center space-x-2">
                       <FiMail className="w-4 h-4" />
-                      <span>Email Address</span>
+                      <span>Email Address *</span>
                     </label>
                     <input
+                      id="email"
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
                       placeholder="john@example.com"
-                      className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
+                      className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isSubmitting}
+                      aria-required="true"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300 flex items-center space-x-2">
+                  <label htmlFor="subject" className="text-sm font-medium text-gray-300 flex items-center space-x-2">
                     <FiMessageSquare className="w-4 h-4" />
-                    <span>Subject</span>
+                    <span>Subject (Optional)</span>
                   </label>
                   <input
+                    id="subject"
                     type="text"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    required
-                    placeholder="Project Inquiry"
-                    className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all"
+                    placeholder="Project Inquiry, Job Opportunity, etc."
+                    className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300 flex items-center space-x-2">
+                  <label htmlFor="message" className="text-sm font-medium text-gray-300 flex items-center space-x-2">
                     <FiMessageSquare className="w-4 h-4" />
-                    <span>Your Message</span>
+                    <span>Your Message *</span>
                   </label>
                   <textarea
+                    id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                     rows={5}
-                    placeholder="Tell me about your project or opportunity..."
-                    className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all resize-none"
+                    placeholder="Tell me about your project, opportunity, or just say hello..."
+                    className="w-full px-4 py-3 bg-white/5 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting}
+                    aria-required="true"
                   />
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <p className="text-sm text-gray-400">
-                    I typically respond within 24 hours
-                  </p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-4">
+                  <div className="text-sm text-gray-400">
+                    <p>Fields marked with * are required</p>
+                    <p className="text-xs mt-1">Your data is secure and won't be shared</p>
+                  </div>
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={isSubmitting ? {} : { scale: 1.05 }}
+                    whileTap={isSubmitting ? {} : { scale: 0.95 }}
                     className={`px-6 sm:px-8 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-semibold rounded-lg flex items-center space-x-2 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all ${isSubmitting ? 'opacity-80 cursor-not-allowed' : ''}`}
+                    aria-label={isSubmitting ? "Sending message..." : "Send message"}
+                    aria-disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Sending...</span>
+                        <span>Processing...</span>
                       </>
                     ) : (
                       <>
@@ -229,6 +392,10 @@ export default function Contact() {
                       </>
                     )}
                   </motion.button>
+                </div>
+
+                <div className="text-xs text-gray-500 pt-2 border-t border-gray-800">
+                  <p>By submitting this form, you agree to our privacy policy and consent to being contacted.</p>
                 </div>
               </form>
             )}
@@ -262,6 +429,7 @@ export default function Contact() {
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ y: -5 }}
                     className="group p-4 rounded-xl bg-white/5 border border-gray-700 hover:border-cyan-500/30 transition-all"
+                    aria-label={`Contact via ${info.title}`}
                   >
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${info.color} p-0.5 mb-3`}>
                       <div className="w-full h-full rounded-lg bg-gray-900 flex items-center justify-center">
@@ -300,7 +468,7 @@ export default function Contact() {
                     whileHover={{ scale: 1.05, y: -3 }}
                     whileTap={{ scale: 0.95 }}
                     className={`p-3 sm:p-4 rounded-xl bg-white/5 border border-gray-700 flex flex-col items-center justify-center text-gray-400 ${social.color} transition-all`}
-                    aria-label={social.label}
+                    aria-label={`Connect on ${social.label}`}
                   >
                     <social.icon className="w-5 h-5 sm:w-6 sm:h-6 mb-2" />
                     <span className="text-xs sm:text-sm font-medium">{social.label}</span>
@@ -373,6 +541,7 @@ export default function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 px-4 py-3 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 hover:border-green-500/50 text-green-400 hover:text-green-300 font-medium rounded-lg text-center transition-all flex items-center justify-center space-x-2"
+                  aria-label="Contact via WhatsApp"
                 >
                   <FaWhatsapp className="w-5 h-5" />
                   <span>WhatsApp</span>
@@ -382,6 +551,7 @@ export default function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 px-4 py-3 bg-blue-400/10 hover:bg-blue-400/20 border border-blue-400/30 hover:border-blue-400/50 text-blue-300 hover:text-blue-200 font-medium rounded-lg text-center transition-all flex items-center justify-center space-x-2"
+                  aria-label="Contact via Telegram"
                 >
                   <FaTelegram className="w-5 h-5" />
                   <span>Telegram</span>
@@ -391,7 +561,7 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Map Location (Optional) */}
+        {/* Map Location */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -406,28 +576,24 @@ export default function Contact() {
             </h3>
 
             <div className="relative h-64 sm:h-80 md:h-96 rounded-xl overflow-hidden">
-              <div className="absolute inset-0">
-                {/* Google Map */}
-                <iframe
-                  title="Naraina Vihar Location"
-                  src="https://www.google.com/maps?q=Naraina+Vihar,+New+Delhi,+Delhi&output=embed"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                />
+              <div className="absolute inset-0 bg-gray-800 animate-pulse" />
+              <iframe
+                title="Naraina Vihar Location"
+                src="https://www.google.com/maps?q=Naraina+Vihar,+New+Delhi,+Delhi&output=embed"
+                className="w-full h-full border-0 relative z-10"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <FiMapPin className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
-                    <h4 className="text-lg font-bold mb-2">Naraina Vihar, New Delhi</h4>
-                    <p className="text-gray-200">📍 Capital Tech & Business Zone</p>
-                  </div>
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20 pointer-events-none">
+                <div className="text-center text-white">
+                  <FiMapPin className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-bold mb-2">Naraina Vihar, New Delhi</h4>
+                  <p className="text-gray-200">📍 Capital Tech & Business Zone</p>
                 </div>
               </div>
-
-
-              {/* Map Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
             </div>
 
             <p className="text-sm text-gray-400 mt-4 text-center">

@@ -19,6 +19,11 @@ export const metadata = {
   title: "Rinku Kumar | MERN Stack Developer",
   description: "Professional Portfolio of Rinku Kumar - Expert MERN Stack Developer",
   keywords: "MERN Stack, React, Node.js, MongoDB, Full Stack Developer, Portfolio",
+  
+  verification: {
+    google: "6Oss1I1EiNvTE0QIXXMIyp13gSUNmCfHbduRcyggxdE",
+  },
+
   openGraph: {
     title: "Rinku Kumar | MERN Stack Developer",
     description: "Professional Portfolio of Rinku Kumar",

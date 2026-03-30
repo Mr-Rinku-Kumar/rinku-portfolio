@@ -21,7 +21,7 @@ export const metadata = {
   keywords: "MERN Stack, React, Node.js, MongoDB, Full Stack Developer, Portfolio",
   
   verification: {
-    google: "6Oss1I1EiNvTE0QIXXMIyp13gSUNmCfHbduRcyggxdE",
+    google: "K3ofjSJOPA_y3QNBv3GFlG2FWYEt6uVnG",
   },
 
   openGraph: {

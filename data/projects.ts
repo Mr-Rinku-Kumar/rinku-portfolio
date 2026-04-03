@@ -130,8 +130,8 @@ export const projects: Project[] = [
     ],
     category: "Frontend",
     status: "Completed",
-    githubUrl: "https://github.com",
-    liveUrl: "https://textutils-demo.com",
+    githubUrl: "https://github.com/Mr-Rinku-Kumar/Textutils/tree/gh-pages",
+    liveUrl: "https://mr-rinku-kumar.github.io/Textutils/",
     imageColor: "from-orange-500 to-yellow-500",
     gradient: "bg-gradient-to-br from-orange-500/20 to-yellow-500/20"
   },

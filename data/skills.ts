@@ -123,16 +123,16 @@ export const skills: Skill[] = [
     gradient: "from-green-600 to-lime-500",
     description: "NoSQL database design and optimization"
   },
-  {
-    id: 8,
-    name: "PostgreSQL",
-    level: 75,
-    icon: SiPostgresql,
-    color: "text-blue-400",
-    category: "Database",
-    gradient: "from-blue-400 to-indigo-500",
-    description: "Relational database management"
-  },
+  // {
+  //   id: 8,
+  //   name: "PostgreSQL",
+  //   level: 75,
+  //   icon: SiPostgresql,
+  //   color: "text-blue-400",
+  //   category: "Database",
+  //   gradient: "from-blue-400 to-indigo-500",
+  //   description: "Relational database management"
+  // },
   {
     id: 9,
     name: "Redux",
@@ -143,16 +143,16 @@ export const skills: Skill[] = [
     gradient: "from-purple-500 to-violet-500",
     description: "State management library for React"
   },
-  {
-    id: 10,
-    name: "GraphQL",
-    level: 70,
-    icon: SiGraphqlIcon,
-    color: "text-pink-500",
-    category: "Backend",
-    gradient: "from-pink-500 to-rose-500",
-    description: "API query language implementation"
-  },
+  // {
+  //   id: 10,
+  //   name: "GraphQL",
+  //   level: 70,
+  //   icon: SiGraphqlIcon,
+  //   color: "text-pink-500",
+  //   category: "Backend",
+  //   gradient: "from-pink-500 to-rose-500",
+  //   description: "API query language implementation"
+  // },
   {
     id: 11,
     name: "Docker",
@@ -163,16 +163,16 @@ export const skills: Skill[] = [
     gradient: "from-blue-500 to-cyan-500",
     description: "Containerization and deployment"
   },
-  {
-    id: 12,
-    name: "AWS",
-    level: 70,
-    icon: FaAws,
-    color: "text-yellow-500",
-    category: "DevOps",
-    gradient: "from-yellow-500 to-orange-500",
-    description: "Cloud services and deployment"
-  },
+  // {
+  //   id: 12,
+  //   name: "AWS",
+  //   level: 70,
+  //   icon: FaAws,
+  //   color: "text-yellow-500",
+  //   category: "DevOps",
+  //   gradient: "from-yellow-500 to-orange-500",
+  //   description: "Cloud services and deployment"
+  // },
   {
     id: 13,
     name: "Git",
@@ -183,36 +183,36 @@ export const skills: Skill[] = [
     gradient: "from-orange-500 to-red-500",
     description: "Version control and collaboration"
   },
-  {
-    id: 14,
-    name: "Jest",
-    level: 80,
-    icon: SiJest,
-    color: "text-red-500",
-    category: "Testing",
-    gradient: "from-red-500 to-pink-500",
-    description: "Testing framework for JavaScript"
-  },
-  {
-    id: 15,
-    name: "Firebase",
-    level: 75,
-    icon: SiFirebase,
-    color: "text-yellow-400",
-    category: "Backend",
-    gradient: "from-yellow-400 to-orange-500",
-    description: "Backend-as-a-Service platform"
-  },
-  {
-    id: 16,
-    name: "Figma",
-    level: 65,
-    icon: FaFigma,
-    color: "text-purple-400",
-    category: "Design",
-    gradient: "from-purple-400 to-pink-500",
-    description: "UI/UX design and prototyping"
-  }
+  // {
+  //   id: 14,
+  //   name: "Jest",
+  //   level: 80,
+  //   icon: SiJest,
+  //   color: "text-red-500",
+  //   category: "Testing",
+  //   gradient: "from-red-500 to-pink-500",
+  //   description: "Testing framework for JavaScript"
+  // },
+  // {
+  //   id: 15,
+  //   name: "Firebase",
+  //   level: 75,
+  //   icon: SiFirebase,
+  //   color: "text-yellow-400",
+  //   category: "Backend",
+  //   gradient: "from-yellow-400 to-orange-500",
+  //   description: "Backend-as-a-Service platform"
+  // },
+  // {
+  //   id: 16,
+  //   name: "Figma",
+  //   level: 65,
+  //   icon: FaFigma,
+  //   color: "text-purple-400",
+  //   category: "Design",
+  //   gradient: "from-purple-400 to-pink-500",
+  //   description: "UI/UX design and prototyping"
+  // }
 ];
 
 export const skillCategories: SkillCategory[] = [

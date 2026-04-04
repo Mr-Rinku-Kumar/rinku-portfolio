@@ -94,9 +94,9 @@ export const projects: Project[] = [
   {
     id: 3,
     title: "QuikNews",
-    description: "Responsive news aggregation web app using React and News API",
+    description: "Responsive news aggregation web app using React and GNEWS API",
     detailedDescription: "A modern news aggregator that fetches top headlines from various categories and sources. Features infinite scrolling, category filtering, and bookmark functionality.",
-    techStack: ["React", "News API", "Tailwind CSS", "Axios", "React Router", "Context API"],
+    techStack: ["React", "GNEWS API", "Tailwind CSS", "Axios", "React Router", "Context API"],
     icons: [FaReact, FaNewspaper, SiTailwindcss, FiTrendingUp],
     features: [
       "Real-time news aggregation",
@@ -108,8 +108,8 @@ export const projects: Project[] = [
     ],
     category: "Frontend",
     status: "Live",
-    githubUrl: "https://github.com",
-    liveUrl: "https://quiknews-demo.com",
+    githubUrl: "https://github.com/Mr-Rinku-Kumar/Quicknewss",
+    liveUrl: "https://quicknewss-cgwx.vercel.app/general",
     imageColor: "from-purple-500 to-pink-500",
     gradient: "bg-gradient-to-br from-purple-500/20 to-pink-500/20"
   },

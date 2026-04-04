@@ -86,8 +86,8 @@ export const projects: Project[] = [
     ],
     category: "Full Stack",
     status: "Completed",
-    githubUrl: "https://github.com",
-    liveUrl: "https://inotebook-demo.com",
+    githubUrl: "https://github.com/Mr-Rinku-Kumar/Inotesbook",
+    liveUrl: "https://inotesbook-client.onrender.com/login",
     imageColor: "from-green-500 to-emerald-500",
     gradient: "bg-gradient-to-br from-green-500/20 to-emerald-500/20"
   },
